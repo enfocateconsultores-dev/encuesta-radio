@@ -1,0 +1,502 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Consulta a Radioescuchas · Costa Grande</title>
+<meta name="description" content="Consulta de opinión para radioescuchas de Zihuatanejo y municipios vecinos sobre programas de noticias y contenido político.">
+<!-- CONTROL DE METADATOS
+     IA Utilizada: Claude (Anthropic)
+     Catedrático/Autor: Luis Arturo López Vergara
+     Correo Electrónico: luislopezv71@gmail.com
+     Fecha de desarrollo: 2026-10-06
+     Identificador Único: ProgramasPoliticos-ENFOCATE-2026-EncuestaRadio-V2 -->
+<meta name="author" content="Luis Arturo López Vergara">
+<meta name="generator" content="Claude (Anthropic)">
+<meta name="identifier" content="ProgramasPoliticos-ENFOCATE-2026-EncuestaRadio-V2">
+<meta name="theme-color" content="#1B2A4A">
+<meta property="og:title" content="Consulta a Radioescuchas · Costa Grande">
+<meta property="og:description" content="Cuéntanos qué programas escuchas y en quién confías. 5 minutos, anónima.">
+<link rel="icon" href="favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#1B2A4A; --navy-2:#24365e; --red:#B5121B; --orange:#E8590C; --teal:#0F7173;
+  --ink:#1B2A4A; --muted:#5B6678; --line:#D9DEE7; --soft:#F0F4FA; --bg:#F7F8FB; --card:#FFFFFF;
+  --sel:#FFF1EA; --sel-line:#E8590C; --ok:#0F7173; --err:#B5121B;
+  --r:14px;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font:400 17px/1.5 "Source Sans 3",system-ui,-apple-system,Segoe UI,Roboto,sans-serif;-webkit-font-smoothing:antialiased}
+h1,h2,h3{font-family:"Source Serif 4",Georgia,serif;margin:0;line-height:1.2}
+button{font:inherit}
+.top{background:var(--navy);color:#fff;position:sticky;top:0;z-index:5;box-shadow:0 2px 10px rgba(0,0,0,.12)}
+.top .in{max-width:680px;margin:0 auto;padding:12px 16px;display:flex;align-items:center;gap:12px}
+.top img{width:34px;height:34px;flex:none}
+.brand{display:flex;flex-direction:column;line-height:1.15;min-width:0}
+.brand b{font-family:"Source Serif 4",Georgia,serif;letter-spacing:.06em;font-size:16px}
+.brand span{font-size:12.5px;opacity:.75;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.step-lbl{margin-left:auto;font-size:13px;opacity:.85;white-space:nowrap}
+.bar{height:4px;background:rgba(255,255,255,.15)}
+.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--red),var(--orange));transition:width .35s ease}
+main{max-width:680px;margin:0 auto;padding:20px 16px 120px}
+.hero{background:var(--card);border-radius:var(--r);padding:26px 20px;border:1px solid var(--line);position:relative;overflow:hidden}
+.hero::before{content:"";position:absolute;inset:0 0 auto 0;height:5px;background:linear-gradient(90deg,var(--red),var(--orange))}
+.kicker{font-size:12.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--red)}
+.hero h1{font-size:28px;margin:8px 0 10px}
+.hero p{margin:0 0 12px;color:var(--muted)}
+.facts{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:18px 0}
+.fact{background:var(--soft);border-radius:10px;padding:10px 8px;text-align:center}
+.fact b{display:block;font-size:20px;font-family:"Source Serif 4",Georgia,serif}
+.fact span{font-size:12.5px;color:var(--muted)}
+details.priv{background:var(--soft);border-radius:10px;padding:12px 14px;margin:14px 0;font-size:15px}
+details.priv summary{cursor:pointer;font-weight:600}
+details.priv p{margin:8px 0 0;color:var(--muted)}
+.consent{display:flex;gap:12px;align-items:flex-start;padding:14px;border:1.5px solid var(--line);border-radius:12px;cursor:pointer;background:#fff}
+.consent input{width:22px;height:22px;accent-color:var(--red);flex:none;margin-top:2px}
+.sec-head{margin:6px 0 16px}
+.sec-head h2{font-size:24px}
+.sec-head p{margin:6px 0 0;color:var(--muted)}
+.q{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:18px 16px;margin:0 0 14px;transition:border-color .2s}
+.q.bad{border-color:var(--err);box-shadow:0 0 0 3px rgba(181,18,27,.08)}
+.q .lbl{font-weight:600;font-size:17.5px;margin:0 0 4px}
+.q .hint{font-size:13.5px;color:var(--muted);margin:0 0 10px}
+.q .req{color:var(--red)}
+.q .msg{display:none;color:var(--err);font-size:14px;margin-top:8px}
+.q.bad .msg{display:block}
+.opts{display:grid;gap:8px}
+.opt{position:relative}
+.opt input{position:absolute;opacity:0;pointer-events:none}
+.opt label{display:flex;align-items:center;gap:12px;min-height:50px;padding:10px 14px;border:1.5px solid var(--line);border-radius:12px;cursor:pointer;background:#fff;transition:background .15s,border-color .15s;user-select:none}
+.opt label::before{content:"";flex:none;width:20px;height:20px;border:2px solid #A7B1BF;border-radius:50%;background:#fff;transition:all .15s}
+.opt input[type=checkbox]+label::before{border-radius:6px}
+.opt input:checked+label{background:var(--sel);border-color:var(--sel-line)}
+.opt input:checked+label::before{border-color:var(--orange);background:var(--orange);box-shadow:inset 0 0 0 3px #fff}
+.opt input[type=checkbox]:checked+label::before{box-shadow:none;background:var(--orange) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M5 10.5l3.2 3L15 6.5' stroke='white' stroke-width='2.6' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/16px no-repeat}
+.opt input:focus-visible+label{outline:3px solid rgba(232,89,12,.35);outline-offset:2px}
+.opt input:disabled+label{opacity:.45;cursor:not-allowed}
+input[type=text],textarea{width:100%;font:inherit;padding:12px 14px;border:1.5px solid var(--line);border-radius:12px;background:#fff;color:var(--ink)}
+input[type=text]:focus,textarea:focus{outline:none;border-color:var(--orange);box-shadow:0 0 0 3px rgba(232,89,12,.15)}
+textarea{min-height:110px;resize:vertical}
+.count{font-size:12.5px;color:var(--muted);text-align:right;margin-top:4px}
+/* matriz */
+.mx{display:grid;gap:10px}
+.mx-row{border:1px solid var(--line);border-radius:12px;padding:10px 12px;background:#fff}
+.mx-row.bad{border-color:var(--err)}
+.mx-name{font-weight:600;font-size:15.5px;margin-bottom:8px}
+.mx-sc{display:grid;grid-template-columns:repeat(6,1fr);gap:6px}
+.mx-sc input{position:absolute;opacity:0;pointer-events:none}
+.mx-sc label{display:flex;align-items:center;justify-content:center;height:44px;border:1.5px solid var(--line);border-radius:10px;cursor:pointer;font-weight:700;color:var(--muted);background:#fff;transition:all .15s}
+.mx-sc span{position:relative}
+.mx-sc input:checked+label{background:var(--navy);border-color:var(--navy);color:#fff}
+.mx-sc span:last-child input:checked+label{background:#64748B;border-color:#64748B}
+.mx-sc input:focus-visible+label{outline:3px solid rgba(232,89,12,.35)}
+.mx-legend{display:flex;justify-content:space-between;font-size:12.5px;color:var(--muted);margin:0 0 10px}
+/* escala bipolar */
+.s5{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin:10px 0 6px}
+.s5 span{position:relative}
+.s5 input{position:absolute;opacity:0}
+.s5 label{display:block;height:46px;border:1.5px solid var(--line);border-radius:10px;cursor:pointer;background:#fff;transition:all .15s}
+.s5 input:checked+label{background:var(--orange);border-color:var(--orange)}
+.s5-ends{display:flex;justify-content:space-between;gap:14px;font-size:14px;font-weight:600}
+.s5-ends span:last-child{text-align:right}
+/* navegación */
+.nav{position:fixed;left:0;right:0;bottom:0;background:rgba(247,248,251,.94);backdrop-filter:blur(8px);border-top:1px solid var(--line);z-index:6}
+.nav .in{max-width:680px;margin:0 auto;padding:12px 16px calc(12px + env(safe-area-inset-bottom));display:flex;gap:10px}
+.btn{flex:1;min-height:52px;border-radius:12px;border:0;font-weight:700;font-size:17px;cursor:pointer;transition:transform .08s,background .15s}
+.btn:active{transform:scale(.98)}
+.btn.pri{background:var(--red);color:#fff}
+.btn.pri:hover{background:#9c0f17}
+.btn.sec{background:#fff;color:var(--navy);border:1.5px solid var(--line);flex:0 0 34%}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.hidden{display:none!important}
+.done{text-align:center;padding:36px 20px}
+.done .check{width:76px;height:76px;border-radius:50%;background:var(--ok);margin:0 auto 18px;display:grid;place-items:center}
+.done h2{font-size:28px;margin-bottom:10px}
+.done p{color:var(--muted)}
+.folio{display:inline-block;margin-top:10px;padding:8px 14px;background:var(--soft);border-radius:8px;font-family:ui-monospace,Menlo,monospace;font-size:14px}
+.note{font-size:14px;padding:12px 14px;border-radius:10px;margin:14px 0;background:#FFF7E6;color:#7A4B00;border:1px solid #F3D9A4}
+.note.ok{background:#E9F5F5;color:#0B5557;border-color:#B7DCDC}
+.dia-st{margin-bottom:12px}
+.dia-blk{border:1.5px solid var(--line);border-radius:12px;padding:12px;margin-top:10px;background:#fff}
+.dia-blk h4{margin:0 0 8px;font:600 15.5px "Source Sans 3",sans-serif;display:flex;justify-content:space-between;gap:8px}
+.dia-blk h4 small{font-weight:500;color:var(--muted)}
+.hrs{display:grid;grid-template-columns:repeat(6,1fr);gap:6px}
+.hrs button{height:42px;border:1.5px solid var(--line);border-radius:9px;background:#fff;color:var(--muted);font-weight:700;font-size:13.5px;cursor:pointer;padding:0}
+.hrs button[aria-pressed=true]{background:var(--navy);border-color:var(--navy);color:#fff}
+.hrs-lbl{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin:8px 2px 4px}
+.campo{border:1.5px dashed var(--teal);border-radius:12px;padding:12px 14px;margin-top:14px;background:#F4FAFA}
+.campo h3{font:700 15px "Source Sans 3",sans-serif;color:var(--teal);margin:0 0 8px}
+.campo .row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px}
+.campo select,.campo input{width:100%;font:inherit;padding:10px 12px;border:1.5px solid var(--line);border-radius:10px;background:#fff}
+.mode-badge{display:inline-block;background:var(--teal);color:#fff;font-size:12px;font-weight:700;padding:3px 8px;border-radius:6px;margin-left:8px;vertical-align:middle;letter-spacing:.04em}
+.hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+footer{max-width:680px;margin:0 auto;padding:10px 16px 30px;font-size:12.5px;color:var(--muted)}
+footer table{width:100%;border-collapse:collapse;margin-top:8px}
+footer td{padding:3px 6px;border-bottom:1px solid var(--line);vertical-align:top}
+footer td:first-child{font-weight:600;white-space:nowrap;width:38%}
+.fade{animation:fade .3s ease}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@media (min-width:560px){.opts.two{grid-template-columns:1fr 1fr}.hero{padding:32px 30px}.hero h1{font-size:32px}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="in">
+    <img src="logo.png" alt="">
+    <div class="brand"><b>ENFÓCATE</b><span>Consulta a radioescuchas · Costa Grande</span></div>
+    <div class="step-lbl" id="stepLbl"></div>
+  </div>
+  <div class="bar"><i id="bar"></i></div>
+</header>
+
+<main id="app">
+  <!-- INTRO -->
+  <section id="intro" class="fade">
+    <div class="hero">
+      <div class="kicker">Zihuatanejo · Petatlán · La Unión</div>
+      <h1>¿Qué programas escucha y en quién confía?</h1>
+      <p>Queremos conocer cómo se informa la gente de la región sobre lo que pasa en su municipio: qué programas de radio escucha, a qué conductores les cree y qué temas le gustaría que trataran.</p>
+      <div class="facts">
+        <div class="fact"><b>8 min</b><span>aprox.</span></div>
+        <div class="fact"><b>Anónima</b><span>sin nombre ni teléfono</span></div>
+        <div class="fact"><b id="nSec">8</b><span>secciones</span></div>
+      </div>
+      <details class="priv">
+        <summary>Aviso de privacidad simplificado</summary>
+        <p><span data-cfg="RESPONSABLE"></span> es responsable del tratamiento de los datos de esta consulta. No se recaban datos que lo identifiquen (nombre, teléfono, domicilio, credencial). Las respuestas se usan solo en forma agregada, con fines de investigación sobre hábitos de consumo de medios en la región. Para dudas o para ejercer sus derechos ARCO, escriba a <span data-cfg="CONTACTO_PRIVACIDAD"></span>.</p>
+        <p>Esta es una <b>consulta de opinión abierta y voluntaria</b>, no una encuesta por muestreo: sus resultados describen a quienes participan y no representan al total del electorado ni anticipan resultados electorales.</p>
+      </details>
+      <label class="consent"><input type="checkbox" id="consent"><span id="consentTxt">Tengo 18 años o más, leí el aviso de privacidad y acepto participar de forma voluntaria.</span></label>
+      <div id="campoBox" class="campo hidden">
+        <h3>Registro de no respuesta (encuestador)</h3>
+        <div class="row">
+          <input type="text" id="nrEnc" placeholder="Clave encuestador" maxlength="20">
+          <input type="text" id="nrSec" placeholder="Sección" maxlength="6" inputmode="numeric">
+        </div>
+        <select id="nrMot"><option value="">Motivo…</option><option>Rechazo</option><option>Nadie en casa</option><option>Vivienda deshabitada</option><option>Persona seleccionada no disponible</option><option>No elegible (menor de 18 / no reside)</option><option>Entrevista suspendida</option></select>
+        <button type="button" class="btn sec" id="nrBtn" style="width:100%;margin-top:8px;flex:none">Registrar no respuesta</button>
+        <div id="nrMsg" class="note ok hidden"></div>
+      </div>
+      <div id="repeatNote" class="note hidden">Ya se registró una respuesta desde este dispositivo. Si otra persona de su hogar quiere participar, puede continuar.</div>
+      <div id="closedNote" class="note hidden">Esta consulta ya está cerrada. ¡Gracias por su interés!</div>
+    </div>
+  </section>
+
+  <!-- PASOS -->
+  <form id="form" class="hidden" novalidate autocomplete="off">
+    <div class="hp" aria-hidden="true"><label>Sitio web <input type="text" name="website" tabindex="-1"></label></div>
+    <div id="steps"></div>
+  </form>
+
+  <!-- FINAL -->
+  <section id="done" class="hidden fade">
+    <div class="hero done">
+      <div class="check"><svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div>
+      <h2>¡Gracias por participar!</h2>
+      <p>Su opinión ayuda a entender mejor cómo se informa la gente de la Costa Grande.</p>
+      <div class="folio" id="folio"></div>
+      <div id="sendNote" class="note hidden"></div>
+      <p style="margin-top:18px;font-size:15px">Puede compartir esta consulta con familiares y vecinos mayores de 18 años.</p>
+      <button type="button" class="btn sec" id="shareBtn" style="flex:none;padding:0 22px;margin-top:6px">Compartir enlace</button>
+    </div>
+  </section>
+</main>
+
+<nav class="nav" id="nav">
+  <div class="in">
+    <button type="button" class="btn sec hidden" id="prev">Atrás</button>
+    <button type="button" class="btn pri" id="next" disabled>Comenzar</button>
+  </div>
+</nav>
+
+<footer>
+  <div>Consulta de opinión no probabilística · <span data-cfg="RESPONSABLE"></span> · RNP 201503052118069</div>
+  <details style="margin-top:6px"><summary>Control de metadatos</summary>
+    <table>
+      <tr><td>IA utilizada</td><td>Claude (Anthropic)</td></tr>
+      <tr><td>Catedrático / Autor</td><td>Luis Arturo López Vergara</td></tr>
+      <tr><td>Correo electrónico</td><td>luislopezv71@gmail.com</td></tr>
+      <tr><td>Fecha de desarrollo</td><td>6 de octubre de 2026</td></tr>
+      <tr><td>Identificador único</td><td>ProgramasPoliticos-ENFOCATE-2026-EncuestaRadio-V2</td></tr>
+    </table>
+  </details>
+</footer>
+
+<script src="config.js"></script>
+<script src="questions.js"></script>
+<script>
+(function(){
+"use strict";
+const C = window.CONFIG || {}, E = window.ENCUESTA;
+const $ = s => document.querySelector(s);
+const LS = {
+  get(k, d){ try{ const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; }catch(e){ return d; } },
+  set(k, v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} }
+};
+const esc = s => String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const EXCL = /^(Ninguno|Ninguna|No escucho radio|No hago nada|No uso redes sociales)$/;
+
+document.querySelectorAll("[data-cfg]").forEach(el => el.textContent = C[el.dataset.cfg] || "");
+
+// Origen del enlace: ?src=globo, ?src=variedades, ?src=facebook … sirve para saber qué medio difundió la consulta
+const params = new URLSearchParams(location.search);
+const origen = (params.get("src") || params.get("utm_source") || "directo").slice(0, 40).replace(/[^\w\-\.]/g, "");
+
+const CAMPO = params.get("modo") === "campo";
+const ENC = (params.get("enc") || "").slice(0, 20);
+const SEC = E.secciones.filter(s => !s.soloCampo || CAMPO);
+const QALL = SEC.flatMap(s => s.preguntas);
+let step = -1, t0 = 0;
+const total = SEC.length;
+$("#nSec").textContent = total;
+const horaLbl = h => h + "–" + (h + 1);
+
+// ---------- Render ----------
+function renderQ(q){
+  const hint = q.tipo === "multi" && q.max ? `<p class="hint">Puede elegir hasta ${q.max}.</p>` :
+               q.tipo === "multi" ? `<p class="hint">Puede elegir varias.</p>` : "";
+  let body = "";
+  if (q.tipo === "single" || q.tipo === "multi"){
+    const t = q.tipo === "single" ? "radio" : "checkbox";
+    const two = q.opciones.length > 5 && q.opciones.every(o => o.length < 28) ? " two" : "";
+    body = `<div class="opts${two}">` + q.opciones.map((o, i) =>
+      `<div class="opt"><input type="${t}" id="${q.id}_${i}" name="${q.id}" value="${esc(o)}"><label for="${q.id}_${i}">${esc(o)}</label></div>`).join("") + `</div>`;
+  } else if (q.tipo === "diary"){
+    body = `<p class="hint">${esc(q.ayuda||"")}</p><div class="opts two dia-st">` + E.estaciones.map(([code, name]) =>
+      `<div class="opt"><input type="checkbox" id="dst_${code}" name="dia_st" value="${code}"><label for="dst_${code}">${esc(name)}</label></div>`).join("") + `</div>` +
+      E.estaciones.map(([code, name]) => `<div class="dia-blk hidden" data-blk="${code}"><h4>${esc(name)} <small data-hn="${code}">0 h</small></h4>
+` +
+        [["Mañana", h => h < 12], ["Tarde", h => h >= 12 && h < 18], ["Noche", h => h >= 18]].map(([lbl, f]) =>
+          `<div class="hrs-lbl"><span>${lbl}</span></div><div class="hrs">` +
+          E.horas.filter(f).map(h => `<button type="button" data-st="${code}" data-h="${h}" aria-pressed="false" aria-label="${esc(name)} de ${h} a ${h+1} horas">${horaLbl(h)}</button>`).join("") + `</div>`).join("") +
+      `</div>`).join("");
+  } else if (q.tipo === "text"){
+    body = `<input type="text" name="${q.id}" maxlength="${q.max||100}" placeholder="${esc(q.placeholder||"")}"${q.numerico ? ' inputmode="numeric" pattern="[0-9]*"' : ""}${q.id === "encuestador" && ENC ? ` value="${esc(ENC)}"` : ""}>`;
+  } else if (q.tipo === "textarea"){
+    body = `<textarea name="${q.id}" maxlength="${q.max||400}" placeholder="${esc(q.placeholder||"")}"></textarea><div class="count" data-count="${q.id}">0 / ${q.max||400}</div>`;
+  } else if (q.tipo === "matrix"){
+    body = `<div class="mx-legend"><span>1 = nada</span><span>5 = mucha</span><span>N/U = no lo uso</span></div><div class="mx">` +
+      q.filas.map(([fid, name]) => `<div class="mx-row" data-row="${fid}"><div class="mx-name">${esc(name)}</div><div class="mx-sc">` +
+        q.escala.map((v, i) => `<span><input type="radio" id="${fid}_${i}" name="${fid}" value="${v}"><label for="${fid}_${i}" aria-label="${esc(name)}: ${v}">${v}</label></span>`).join("") +
+      `</div></div>`).join("") + `</div>`;
+  } else if (q.tipo === "scale5"){
+    body = `<div class="s5">` + [1,2,3,4,5].map(v => `<span><input type="radio" id="${q.id}_${v}" name="${q.id}" value="${v}"><label for="${q.id}_${v}" aria-label="${v} de 5"></label></span>`).join("") +
+      `</div><div class="s5-ends"><span>← ${esc(q.izq)}</span><span>${esc(q.der)} →</span></div>`;
+  }
+  const cond = q.si ? ` data-si="${q.si.q}" data-siv="${esc(q.si.v)}"` : "";
+  return `<div class="q${q.si ? " hidden" : ""}" data-q="${q.id}"${cond}><p class="lbl">${esc(q.label)}${q.req ? ' <span class="req">*</span>' : ""}</p>${hint}${body}<div class="msg">${q.tipo==="matrix"?"Califique todas las filas (use N/U si no lo usa).":q.tipo==="diary"?"Marque al menos una estación y las horas en que la escuchó.":q.numerico?"Escriba solo números.":"Esta pregunta es obligatoria."}</div></div>`;
+}
+$("#steps").innerHTML = SEC.map((s, i) =>
+  `<section class="step hidden" data-step="${i}"><div class="sec-head"><div class="kicker">Sección ${i+1} de ${total}</div><h2>${esc(s.titulo)}</h2>${s.intro?`<p>${esc(s.intro)}</p>`:""}</div>${s.preguntas.map(renderQ).join("")}</section>`).join("");
+
+// ---------- Interacciones ----------
+const form = $("#form");
+function applyCond(){
+  form.querySelectorAll("[data-si]").forEach(qEl => {
+    const x = form.querySelector(`input[name="${qEl.dataset.si}"]:checked`);
+    qEl.classList.toggle("hidden", !(x && x.value === qEl.dataset.siv));
+  });
+}
+form.addEventListener("click", e => {
+  const b = e.target.closest(".hrs button"); if (!b) return;
+  b.setAttribute("aria-pressed", b.getAttribute("aria-pressed") === "true" ? "false" : "true");
+  const code = b.dataset.st, n = form.querySelectorAll(`.hrs button[data-st="${code}"][aria-pressed=true]`).length;
+  form.querySelector(`[data-hn="${code}"]`).textContent = n + " h";
+  b.closest(".q").classList.remove("bad");
+});
+form.addEventListener("change", e => {
+  const el = e.target;
+  if (el.name === "dia_st"){
+    form.querySelector(`[data-blk="${el.value}"]`).classList.toggle("hidden", !el.checked);
+    if (!el.checked) form.querySelectorAll(`.hrs button[data-st="${el.value}"]`).forEach(b => b.setAttribute("aria-pressed", "false"));
+  }
+  if (el.type === "radio") applyCond();
+  if (el.type === "checkbox"){
+    const q = QALL.find(x => x.id === el.name);
+    const boxes = [...form.querySelectorAll(`input[name="${el.name}"]`)];
+    if (EXCL.test(el.value) && el.checked) boxes.forEach(b => { if (b !== el) b.checked = false; });
+    else if (el.checked) boxes.forEach(b => { if (EXCL.test(b.value)) b.checked = false; });
+    if (q && q.max){
+      const n = boxes.filter(b => b.checked).length;
+      boxes.forEach(b => b.disabled = !b.checked && n >= q.max);
+    }
+  }
+  const qEl = el.closest(".q"); if (qEl) qEl.classList.remove("bad");
+  const row = el.closest(".mx-row"); if (row) row.classList.remove("bad");
+});
+form.addEventListener("input", e => {
+  const c = form.querySelector(`[data-count="${e.target.name}"]`);
+  if (c) c.textContent = `${e.target.value.length} / ${e.target.maxLength}`;
+});
+
+const consent = $("#consent");
+consent.addEventListener("change", () => $("#next").disabled = !consent.checked);
+if (LS.get("enf_done", null)) $("#repeatNote").classList.remove("hidden");
+if (C.CIERRE && new Date() > new Date(C.CIERRE + "T23:59:59")){
+  $("#closedNote").classList.remove("hidden"); consent.disabled = true; $("#nav").classList.add("hidden");
+}
+
+function validate(i){
+  let firstBad = null;
+  SEC[i].preguntas.forEach(q => {
+    const qEl = form.querySelector(`[data-q="${q.id}"]`);
+    if (qEl.classList.contains("hidden")) return;
+    let ok = true;
+    if (q.numerico && form.elements[q.id].value.trim() && !/^\d+$/.test(form.elements[q.id].value.trim())) ok = false;
+    else if (!q.req) return;
+    else if (q.tipo === "diary"){
+      const sts = [...form.querySelectorAll('input[name="dia_st"]:checked')];
+      ok = sts.length > 0 && sts.every(x => form.querySelector(`.hrs button[data-st="${x.value}"][aria-pressed=true]`));
+    } else if (q.tipo === "matrix"){
+      q.filas.forEach(([fid]) => {
+        const r = !!form.querySelector(`input[name="${fid}"]:checked`);
+        form.querySelector(`[data-row="${fid}"]`).classList.toggle("bad", !r);
+        if (!r) ok = false;
+      });
+    } else if (q.tipo === "text" || q.tipo === "textarea"){
+      ok = ok && !!form.elements[q.id].value.trim();
+    } else ok = !!form.querySelector(`input[name="${q.id}"]:checked`);
+    qEl.classList.toggle("bad", !ok);
+    if (!ok && !firstBad) firstBad = qEl;
+  });
+  if (firstBad) firstBad.scrollIntoView({behavior: "smooth", block: "center"});
+  return !firstBad;
+}
+
+function show(i){
+  step = i;
+  $("#intro").classList.toggle("hidden", i >= 0);
+  form.classList.toggle("hidden", i < 0);
+  document.querySelectorAll(".step").forEach(s => s.classList.toggle("hidden", +s.dataset.step !== i));
+  if (i >= 0) form.querySelector(`[data-step="${i}"]`).classList.add("fade");
+  $("#prev").classList.toggle("hidden", i < 0);
+  $("#next").textContent = i < 0 ? "Comenzar" : i === total - 1 ? "Enviar respuestas" : "Siguiente";
+  $("#bar").style.width = i < 0 ? "0%" : ((i) / total * 100) + "%";
+  $("#stepLbl").textContent = i < 0 ? "" : `${i+1} / ${total}`;
+  window.scrollTo({top: 0, behavior: "smooth"});
+}
+
+$("#next").addEventListener("click", () => {
+  if (step < 0){ if (!consent.checked) return; t0 = Date.now(); show(0); return; }
+  if (!validate(step)) return;
+  if (step < total - 1) show(step + 1); else submit();
+});
+$("#prev").addEventListener("click", () => show(step - 1));
+
+// ---------- Envío ----------
+function uid(){
+  const a = new Uint8Array(6); (window.crypto || {}).getRandomValues ? crypto.getRandomValues(a) : a.forEach((_, i) => a[i] = Math.random()*256);
+  return "R" + Date.now().toString(36).toUpperCase() + "-" + [...a].map(b => b.toString(16).padStart(2, "0")).join("").slice(0, 6).toUpperCase();
+}
+function collect(){
+  const d = {};
+  SEC.forEach(s => s.preguntas.forEach(q => {
+    const hidden = form.querySelector(`[data-q="${q.id}"]`).classList.contains("hidden");
+    if (q.tipo === "diary"){
+      let tot = 0; const lst = [];
+      E.estaciones.forEach(([code]) => {
+        const hs = hidden ? [] : [...form.querySelectorAll(`.hrs button[data-st="${code}"][aria-pressed=true]`)].map(b => +b.dataset.h);
+        d["d_" + code] = hs.join(" "); tot += hs.length; if (hs.length) lst.push(code);
+      });
+      d.diario_estaciones = lst.join(" | "); d.diario_horas = tot;
+      return;
+    }
+    if (hidden){ d[q.id] = ""; return; }
+    if (q.tipo === "multi") d[q.id] = [...form.querySelectorAll(`input[name="${q.id}"]:checked`)].map(x => x.value).join(" | ");
+    else if (q.tipo === "matrix") q.filas.forEach(([fid]) => { const x = form.querySelector(`input[name="${fid}"]:checked`); d[fid] = x ? x.value : ""; });
+    else if (q.tipo === "text" || q.tipo === "textarea") d[q.id] = form.elements[q.id].value.trim();
+    else { const x = form.querySelector(`input[name="${q.id}"]:checked`); d[q.id] = x ? x.value : ""; }
+  }));
+  // Nivel socioeconómico (regla AMAI)
+  if (E.nse){
+    let pts = 0, okN = true;
+    E.nse.preguntas.forEach(id => { const q = QALL.find(x => x.id === id), i = q ? q.opciones.indexOf(d[id]) : -1; if (i < 0) okN = false; else pts += q.puntos[i]; });
+    d.nse_puntos = okN ? pts : ""; d.nse = okN ? E.nse.cortes.find(c => pts >= c[0])[1] : "";
+  }
+  // Día de la semana al que se refiere "ayer"
+  const ay = new Date(Date.now() - 864e5);
+  d.dia_referido = ["domingo","lunes","martes","miércoles","jueves","viernes","sábado"][ay.getDay()];
+  d.fecha_referida = ay.toISOString().slice(0, 10);
+  const secs = Math.round((Date.now() - t0) / 1000);
+  return Object.assign({
+    folio: uid(), fecha: new Date().toISOString(), estudio: C.ESTUDIO_ID, version: E.version,
+    tipo: "entrevista", modo: CAMPO ? "campo" : "autoaplicada",
+    origen, duracion_seg: secs,
+    bandera_rapida: secs < 60 ? "si" : "no",
+    bandera_repetida: !CAMPO && LS.get("enf_done", null) ? "si" : "no",
+    bandera_bot: form.elements.website.value ? "si" : "no",
+    dispositivo: /Mobi|Android/i.test(navigator.userAgent) ? "movil" : "escritorio"
+  }, d);
+}
+async function post(rec){
+  const r = await fetch(C.SCRIPT_URL, { method: "POST", body: JSON.stringify(rec) }); // text/plain: evita preflight CORS
+  const j = await r.json();
+  if (!j.ok) throw new Error(j.error || "error");
+}
+async function flush(){
+  if (!C.SCRIPT_URL) return;
+  const pend = LS.get("enf_pend", []); if (!pend.length) return;
+  const rest = [];
+  for (const rec of pend){ try{ await post(rec); }catch(e){ rest.push(rec); } }
+  LS.set("enf_pend", rest);
+}
+async function submit(){
+  const btn = $("#next"); btn.disabled = true; btn.textContent = "Enviando…";
+  const rec = collect();
+  const note = $("#sendNote");
+  if (!C.SCRIPT_URL){
+    const loc = LS.get("enf_local", []); loc.push(rec); LS.set("enf_local", loc);
+    note.textContent = "Modo prueba: la respuesta se guardó solo en este navegador (configure SCRIPT_URL en config.js).";
+    note.classList.remove("hidden");
+  } else {
+    try { await post(rec); }
+    catch(e){
+      const p = LS.get("enf_pend", []); p.push(rec); LS.set("enf_pend", p);
+      note.textContent = "No hubo conexión. Su respuesta quedó guardada en este teléfono y se enviará automáticamente la próxima vez que abra esta página.";
+      note.classList.remove("hidden");
+    }
+  }
+  if (!CAMPO) LS.set("enf_done", rec.fecha);
+  else { $("#shareBtn").textContent = "Nueva entrevista"; $("#shareBtn").onclick = () => location.reload(); }
+  $("#folio").textContent = "Folio: " + rec.folio;
+  form.classList.add("hidden"); $("#done").classList.remove("hidden");
+  $("#nav").classList.add("hidden"); $("#bar").style.width = "100%"; $("#stepLbl").textContent = "✓";
+  window.scrollTo({top: 0});
+}
+$("#shareBtn").addEventListener("click", async () => {
+  if (CAMPO) return;
+  const url = location.origin + location.pathname + (origen !== "directo" ? "?src=" + origen : "");
+  const data = { title: document.title, text: "Consulta a radioescuchas de la Costa Grande: ¿qué programas escuchas y en quién confías?", url };
+  if (navigator.share){ try{ await navigator.share(data); }catch(e){} }
+  else { try{ await navigator.clipboard.writeText(url); $("#shareBtn").textContent = "Enlace copiado ✓"; }catch(e){ prompt("Copie el enlace:", url); } }
+});
+
+async function sendRec(rec){
+  if (!C.SCRIPT_URL){ const loc = LS.get("enf_local", []); loc.push(rec); LS.set("enf_local", loc); return "local"; }
+  try { await post(rec); return "ok"; } catch(e){ const p = LS.get("enf_pend", []); p.push(rec); LS.set("enf_pend", p); return "pend"; }
+}
+if (CAMPO){
+  $("#campoBox").classList.remove("hidden");
+  $(".brand b").insertAdjacentHTML("beforeend", '<span class="mode-badge">CAMPO</span>');
+  $("#consentTxt").textContent = "Leí el aviso de privacidad a la persona seleccionada (18 años o más, residente de la vivienda) y aceptó participar.";
+  $("#repeatNote").classList.add("hidden");
+  $("#nrEnc").value = ENC;
+  $("#nrBtn").addEventListener("click", async () => {
+    const enc = $("#nrEnc").value.trim(), sec = $("#nrSec").value.trim(), mot = $("#nrMot").value, msg = $("#nrMsg");
+    if (!enc || !/^\d+$/.test(sec) || !mot){ msg.textContent = "Complete clave, sección (números) y motivo."; msg.className = "note"; return; }
+    const r = await sendRec({ folio: uid(), fecha: new Date().toISOString(), estudio: C.ESTUDIO_ID, version: E.version,
+      tipo: "no_respuesta", modo: "campo", motivo_no_respuesta: mot, encuestador: enc, seccion: sec, origen });
+    msg.textContent = "No respuesta registrada (" + mot + ")" + (r === "pend" ? " · se enviará al recuperar señal." : r === "local" ? " · modo prueba." : ".");
+    msg.className = "note ok"; $("#nrMot").value = "";
+  });
+}
+show(-1);
+flush();
+})();
+</script>
+</body>
+</html>
