@@ -8,7 +8,7 @@
       descargarse en CSV desde panel.html.
    ===================================================================== */
 window.CONFIG = {
-  SCRIPT_URL: "",                 // ej. "https://script.google.com/macros/s/AKfy.../exec"
+  SCRIPT_URL: "https://script.google.com/macros/s/AKfycbwDx_26qRuINnG-jTKBTfSBmBV-9UMalpYK0uKVIGr8gsViBelmGBI1OxAvbs1cZrt5/exec",                 // ej. "https://script.google.com/macros/s/AKfy.../exec"
   ESTUDIO_ID: "ProgramasPoliticos-ENFOCATE-2026-EncuestaRadio-V2",
   CONTACTO_PRIVACIDAD: "luislopezv71@gmail.com",
   RESPONSABLE: "Enfócate Consultores y Comunicación",
