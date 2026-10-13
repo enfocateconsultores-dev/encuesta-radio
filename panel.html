@@ -6,7 +6,7 @@
 <title>Panel de Resultados · Radioescuchas</title>
 <!-- CONTROL DE METADATOS
      IA Utilizada: Claude (Anthropic) · Catedrático/Autor: Luis Arturo López Vergara
-     Correo Electrónico: luislopezv71@gmail.com · Fecha de desarrollo: 2026-10-06
+     Correo Electrónico: luislopezv71@gmail.com · Fecha de desarrollo: 2026-10-06 · ajuste 2026-10-13
      Identificador Único: ProgramasPoliticos-ENFOCATE-2026-PanelResultados-V2 -->
 <meta name="author" content="Luis Arturo López Vergara">
 <meta name="generator" content="Claude (Anthropic)">
@@ -83,7 +83,7 @@ footer{max-width:1180px;margin:0 auto;padding:0 16px 30px;font-size:12.5px;color
     <div class="row">
       <input type="password" id="token" placeholder="Clave del panel" style="flex:1 1 200px">
       <button class="btn pri" id="load">Cargar respuestas</button>
-      <label class="btn" style="display:inline-flex;align-items:center">Abrir CSV<input type="file" id="csv" accept=".csv" hidden></label>
+      <label class="btn" style="display:inline-flex;align-items:center">Abrir CSV / Excel<input type="file" id="csv" accept=".csv,.xlsx" hidden></label>
       <button class="btn" id="local">Respuestas de este navegador</button>
       <button class="btn" id="demo">Datos de demostración</button>
     </div>
@@ -102,6 +102,7 @@ footer{max-width:1180px;margin:0 auto;padding:0 16px 30px;font-size:12.5px;color
         <select id="fModo"><option value="">Campo y autoaplicadas</option><option value="campo">Solo entrevistas de campo</option><option value="autoaplicada">Solo autoaplicadas (radioescuchas)</option></select>
         <label class="small"><input type="checkbox" id="fPond"> Ponderar por sexo y edad</label>
         <label class="small"><input type="checkbox" id="fClean" checked> Excluir respuestas marcadas (rápidas o bot)</label>
+        <label class="small" title="Calificó igual todos los medios de la pregunta de confianza"><input type="checkbox" id="fPlana"> Excluir respuestas en línea recta</label>
         <button class="btn" id="exp" style="margin-left:auto">Descargar CSV</button>
       </div>
     </div>
@@ -148,8 +149,19 @@ $("#local").onclick = () => {
   if (!a.length) return st("No hay respuestas guardadas en este navegador.");
   start(a, "Este navegador · " + a.length + " registros", false);
 };
-$("#csv").onchange = e => {
+$("#csv").onchange = async e => {
   const f = e.target.files[0]; if (!f) return;
+  if (/\.xlsx$/i.test(f.name)){
+    st("Leyendo Excel…");
+    try {
+      if (!window.XLSX) await new Promise((ok, ko) => { const s = document.createElement("script"); s.src = "https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"; s.onload = ok; s.onerror = ko; document.head.appendChild(s); });
+      const wb = XLSX.read(await f.arrayBuffer(), { type: "array" });
+      const name = wb.SheetNames.find(n => /respuestas/i.test(n)) || wb.SheetNames.find(n => XLSX.utils.sheet_to_json(wb.Sheets[n]).length) || wb.SheetNames[0];
+      const rows = XLSX.utils.sheet_to_json(wb.Sheets[name], { defval: "", raw: false }).map(r => Object.fromEntries(Object.entries(r).map(([k, v]) => [k, String(v)])));
+      start(rows, `Archivo ${f.name} (hoja ${name}) · ${rows.length} registros`, false);
+    } catch(err){ st("No se pudo leer el Excel: " + err.message); }
+    return;
+  }
   f.text().then(t => { const rows = parseCSV(t); start(rows, "Archivo " + f.name + " · " + rows.length + " registros", false); });
 };
 $("#demo").onclick = () => start(demo(400), "Demostración · 400 registros simulados", true);
@@ -228,8 +240,26 @@ function demo(n){
 }
 
 // ---------- Análisis ----------
+/* Normaliza registros (incluye los capturados antes de la corrección):
+   - "semana" incorpora las estaciones escuchadas ayer (coherencia de recordación)
+   - calcula bandera_plana si no existe */
+function normalize(rows){
+  const CR = QM.cred.filas.map(f => f[0]);
+  rows.forEach(r => {
+    if (r.diario_estaciones){
+      const set = new Set(split(r.semana).filter(v => v !== "Ninguna")), before = set.size;
+      split(r.diario_estaciones).forEach(c => { const e = E.estaciones.find(x => x[0] === c); if (e) set.add(e[1]); });
+      if (set.size !== before || split(r.semana).includes("Ninguna")){ r.semana = [...set].join(" | "); r.semana_corregida = "si"; }
+    }
+    if (!r.bandera_plana && r.tipo !== "no_respuesta"){
+      const v = CR.map(k => r[k]).filter(x => x && x !== "N/U");
+      r.bandera_plana = v.length >= 6 && new Set(v).size === 1 ? "si" : "no";
+    }
+  });
+  return rows;
+}
 function start(rows, label, isDemo){
-  ALL = rows; st(label); $("#out").classList.remove("hidden"); $("#demoBanner").classList.toggle("hidden", !isDemo);
+  ALL = normalize(rows); st(label); $("#out").classList.remove("hidden"); $("#demoBanner").classList.toggle("hidden", !isDemo);
   fill("#fMun", "municipio"); fill("#fEdad", "edad"); fill("#fSexo", "sexo");
   if (!C.PONDERACION){ $("#fPond").disabled = true; $("#fPond").parentElement.title = "Defina PONDERACION en config.js con las proporciones del listado nominal"; $("#fPond").parentElement.style.opacity = .55; }
   const o = [...new Set(rows.map(r => r.origen).filter(Boolean))].sort();
@@ -237,7 +267,7 @@ function start(rows, label, isDemo){
   render();
 }
 function fill(sel, id){ const first = $(sel).options[0].outerHTML; $(sel).innerHTML = first + QM[id].opciones.map(v => `<option>${esc(v)}</option>`).join(""); }
-["#fMun","#fEdad","#fSexo","#fOrig","#fClean","#hmBy","#fNse","#fModo","#fPond"].forEach(s => $(s).onchange = render);
+["#fMun","#fEdad","#fSexo","#fOrig","#fClean","#fPlana","#hmBy","#fNse","#fModo","#fPond"].forEach(s => $(s).onchange = render);
 $("#exp").onclick = () => {
   const b = new Blob([toCSV(cur())], {type: "text/csv;charset=utf-8"}); const a = document.createElement("a");
   a.href = URL.createObjectURL(b); a.download = "respuestas_radioescuchas_" + new Date().toISOString().slice(0,10) + ".csv"; a.click(); URL.revokeObjectURL(a.href);
@@ -247,7 +277,7 @@ function cur(){
         nse = $("#fNse").value, md = $("#fModo").value;
   const R = ALL.filter(r => r.tipo !== "no_respuesta" && (!m || r.municipio === m) && (!e || r.edad === e) && (!s || r.sexo === s) && (!o || r.origen === o) &&
     (!nse || r.nse === nse) && (!md || (r.modo || "autoaplicada") === md) &&
-    (!c || (r.bandera_rapida !== "si" && r.bandera_bot !== "si")));
+    (!c || (r.bandera_rapida !== "si" && r.bandera_bot !== "si")) && (!$("#fPlana").checked || r.bandera_plana !== "si"));
   R.forEach(r => r._w = 1);
   if ($("#fPond").checked && C.PONDERACION) rake(R, C.PONDERACION);
   return R;
@@ -291,6 +321,7 @@ function render(){
     [share(R, "programas", "Hablemos Claro (tarde, Variedades 101.9)") + "%", "escuchó Hablemos Claro (último mes)"],
     [share(R, "le_cree", "Al conductor o locutor") + "%", "le cree más al conductor"],
     [ALL.filter(r => r.bandera_rapida === "si" || r.bandera_bot === "si").length, "marcadas (rápidas o bot), total"],
+    [ALL.filter(r => r.bandera_plana === "si").length + " · " + ALL.filter(r => r.semana_corregida === "si").length, "en línea recta · semana corregida con la escucha de ayer"],
     [(CA.length + rech) ? pct(rech, CA.length + rech) + "%" : "–", `tasa de rechazo en campo (${CA.length} entrevistas · ${NR.length} no respuesta)`]
   ];
   $("#kpis").innerHTML = kp.map(([v, l]) => `<div class="kpi"><b>${v}</b><span>${l}</span></div>`).join("");

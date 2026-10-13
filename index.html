@@ -9,7 +9,7 @@
      IA Utilizada: Claude (Anthropic)
      Catedrático/Autor: Luis Arturo López Vergara
      Correo Electrónico: luislopezv71@gmail.com
-     Fecha de desarrollo: 2026-10-06
+     Fecha de desarrollo: 2026-10-06 · ajuste 2026-10-13
      Identificador Único: ProgramasPoliticos-ENFOCATE-2026-EncuestaRadio-V2 -->
 <meta name="author" content="Luis Arturo López Vergara">
 <meta name="generator" content="Claude (Anthropic)">
@@ -313,7 +313,9 @@ form.addEventListener("change", e => {
   if (el.name === "dia_st"){
     form.querySelector(`[data-blk="${el.value}"]`).classList.toggle("hidden", !el.checked);
     if (!el.checked) form.querySelectorAll(`.hrs button[data-st="${el.value}"]`).forEach(b => b.setAttribute("aria-pressed", "false"));
+    syncSemana();
   }
+  if (el.name === "escucho_ayer") syncSemana();
   if (el.type === "radio") applyCond();
   if (el.type === "checkbox"){
     const q = QALL.find(x => x.id === el.name);
@@ -328,6 +330,18 @@ form.addEventListener("change", e => {
   const qEl = el.closest(".q"); if (qEl) qEl.classList.remove("bad");
   const row = el.closest(".mx-row"); if (row) row.classList.remove("bad");
 });
+/* Coherencia: toda estación escuchada AYER también se escuchó en los últimos 7 días.
+   Se marca y se bloquea en "semana"; "Ninguna" se desactiva si ayer escuchó radio. */
+function syncSemana(){
+  const ayer = form.querySelector('input[name="escucho_ayer"]:checked');
+  const on = ayer && ayer.value === "Sí";
+  const sel = on ? new Set([...form.querySelectorAll('input[name="dia_st"]:checked')].map(x => (E.estaciones.find(e => e[0] === x.value) || [])[1])) : new Set();
+  form.querySelectorAll('input[name="semana"]').forEach(b => {
+    if (sel.has(b.value)){ b.checked = true; b.disabled = true; b.dataset.auto = "1"; }
+    else if (b.dataset.auto){ b.disabled = false; delete b.dataset.auto; }
+    if (/^Ninguna$/.test(b.value)){ if (on){ b.checked = false; b.disabled = true; } else b.disabled = false; }
+  });
+}
 form.addEventListener("input", e => {
   const c = form.querySelector(`[data-count="${e.target.name}"]`);
   if (c) c.textContent = `${e.target.value.length} / ${e.target.maxLength}`;
@@ -407,6 +421,11 @@ function collect(){
     }
     if (hidden){ d[q.id] = ""; return; }
     if (q.tipo === "multi") d[q.id] = [...form.querySelectorAll(`input[name="${q.id}"]:checked`)].map(x => x.value).join(" | ");
+    if (q.id === "semana" && d.diario_estaciones){
+      const set = new Set(d.semana ? d.semana.split(" | ").filter(v => v !== "Ninguna") : []);
+      d.diario_estaciones.split(" | ").forEach(c => { const e = E.estaciones.find(x => x[0] === c); if (e) set.add(e[1]); });
+      d.semana = [...set].join(" | ");
+    }
     else if (q.tipo === "matrix") q.filas.forEach(([fid]) => { const x = form.querySelector(`input[name="${fid}"]:checked`); d[fid] = x ? x.value : ""; });
     else if (q.tipo === "text" || q.tipo === "textarea") d[q.id] = form.elements[q.id].value.trim();
     else { const x = form.querySelector(`input[name="${q.id}"]:checked`); d[q.id] = x ? x.value : ""; }
@@ -429,6 +448,8 @@ function collect(){
     bandera_rapida: secs < 60 ? "si" : "no",
     bandera_repetida: !CAMPO && LS.get("enf_done", null) ? "si" : "no",
     bandera_bot: form.elements.website.value ? "si" : "no",
+    bandera_plana: (() => { const v = (QALL.find(q => q.tipo === "matrix") || {filas: []}).filas.map(([k]) => d[k]).filter(x => x && x !== "N/U");
+      return v.length >= 6 && new Set(v).size === 1 ? "si" : "no"; })(),
     dispositivo: /Mobi|Android/i.test(navigator.userAgent) ? "movil" : "escritorio"
   }, d);
 }
