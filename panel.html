@@ -6,12 +6,12 @@
 <title>Panel de Resultados · Radioescuchas</title>
 <!-- CONTROL DE METADATOS
      IA Utilizada: Claude (Anthropic) · Catedrático/Autor: Luis Arturo López Vergara
-     Correo Electrónico: luislopezv71@gmail.com · Fecha de desarrollo: 2026-10-06 · ajuste 2026-10-13
+     Correo Electrónico: luislopezv71@gmail.com · Fecha de desarrollo: 2026-10-06 · ajustes 2026-10-13 (V2.2)
      Identificador Único: ProgramasPoliticos-ENFOCATE-2026-PanelResultados-V2 -->
 <meta name="author" content="Luis Arturo López Vergara">
 <meta name="generator" content="Claude (Anthropic)">
 <meta name="robots" content="noindex,nofollow">
-<link rel="icon" href="favicon.png">
+<link rel="icon" href="favicon.ico">
 <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{--navy:#1B2A4A;--red:#B5121B;--orange:#E8590C;--teal:#0F7173;--ink:#1B2A4A;--muted:#5B6678;--line:#D9DEE7;--soft:#F0F4FA;--bg:#F7F8FB;--card:#fff}
@@ -20,7 +20,7 @@ body{background:var(--bg);color:var(--ink);font:400 15px/1.45 "Source Sans 3",sy
 h1,h2,h3{font-family:"Source Serif 4",Georgia,serif;margin:0}
 .top{background:var(--navy);color:#fff}
 .top .in{max-width:1180px;margin:0 auto;padding:14px 16px;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
-.top img{width:34px;height:34px}.top h1{font-size:19px}.top span{opacity:.75;font-size:13px}
+.top img{width:34px;height:34px;object-fit:contain}.top h1{font-size:19px}.top span{opacity:.75;font-size:13px}
 main{max-width:1180px;margin:0 auto;padding:18px 16px 40px}
 .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:14px}
 .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
@@ -245,7 +245,16 @@ function demo(n){
    - calcula bandera_plana si no existe */
 function normalize(rows){
   const CR = QM.cred.filas.map(f => f[0]);
+  const fmt = new Intl.DateTimeFormat("en-CA", { timeZone: "America/Mexico_City", year: "numeric", month: "2-digit", day: "2-digit" });
+  const DIAS = ["domingo","lunes","martes","miércoles","jueves","viernes","sábado"];
   rows.forEach(r => {
+    // Recalcula el día referido ("ayer") en hora de México a partir de la fecha de captura (corrige registros de V2.1 hechos después de las 18:00)
+    if (r.fecha && r.tipo !== "no_respuesta" && !isNaN(Date.parse(r.fecha))){
+      const loc = fmt.format(new Date(r.fecha)), d = new Date(loc + "T12:00:00Z"); d.setUTCDate(d.getUTCDate() - 1);
+      const fr = d.toISOString().slice(0, 10);
+      if (r.fecha_referida && r.fecha_referida !== fr) r.fecha_referida_corregida = "si";
+      r.fecha_referida = fr; r.dia_referido = DIAS[d.getUTCDay()];
+    }
     if (r.diario_estaciones){
       const set = new Set(split(r.semana).filter(v => v !== "Ninguna")), before = set.size;
       split(r.diario_estaciones).forEach(c => { const e = E.estaciones.find(x => x[0] === c); if (e) set.add(e[1]); });

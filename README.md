@@ -88,7 +88,9 @@ Las respuestas autoaplicadas desde un enlace en la radio (consulta abierta) sirv
 ## 5. Calidad de datos
 
 - **Folio único** por respuesta; el servidor descarta folios duplicados.
-- **Banderas automáticas:** `bandera_rapida` (menos de 60 s), `bandera_repetida` (mismo dispositivo) y `bandera_bot` (campo trampa). El panel excluye por defecto las rápidas y las de bot.
+- **Banderas automáticas:** `bandera_rapida` (menos de 60 s), `bandera_repetida` (mismo dispositivo), `bandera_bot` (campo trampa) y `bandera_plana` (calificó igual al menos 6 medios en la pregunta de confianza). El panel excluye por defecto las rápidas y las de bot; las respuestas en línea recta se excluyen con su propia casilla.
+- **Coherencia de recordación:** las estaciones marcadas para *ayer* se agregan solas a *últimos 7 días* y quedan bloqueadas; si la persona escuchó radio ayer, "Ninguna" se desactiva. El panel aplica la misma corrección a registros anteriores y los marca como `semana_corregida`.
+- **Archivos Excel:** el panel abre directamente el .xlsx descargado de Google Sheets (hoja *Respuestas*).
 - **Sin conexión:** si el teléfono no tiene señal, la respuesta queda guardada y se envía la próxima vez que se abra la página.
 - **Límite** de 120 envíos por minuto en el servidor y protección contra fórmulas inyectadas en la hoja.
 - **Modo prueba:** con `SCRIPT_URL` vacío, las respuestas quedan solo en el navegador y se ven con *Respuestas de este navegador* en el panel.
@@ -114,5 +116,5 @@ Edite `questions.js`. Tipos disponibles: `single`, `multi` (con `max`), `text` (
 | IA utilizada | Claude (Anthropic) |
 | Catedrático / Autor | Luis Arturo López Vergara |
 | Correo electrónico | luislopezv71@gmail.com |
-| Fecha de desarrollo | 6 de octubre de 2026 (V2 tipo INRA) |
+| Fecha de desarrollo | 6 de octubre de 2026 (V2 tipo INRA) · revisión 13 de octubre de 2026 |
 | Identificador único | ProgramasPoliticos-ENFOCATE-2026-EncuestaRadio-V2 |
